@@ -1,0 +1,14 @@
+name: finance-dashboard
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.13
+  - pip
+  - pip:
+    - fastapi
+    - uvicorn[standard]
+    - sqlmodel
+    - pytest
+    - httpx
+    - aiofiles

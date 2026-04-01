@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finance Dashboard | Pure Code</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="dashboard">
+        <header>
+            <div>
+                <h1 style="font-size: 1.8rem; letter-spacing: -0.5px;">Zorvyn Finance</h1>
+                <p style="opacity: 0.5;">Manage your records with pure logic.</p>
+            </div>
+            <div style="display: flex; gap: 16px; align-items: center;">
+                <label style="opacity: 0.6;">Current User:</label>
+                <select id="userSelect" onchange="switchUser()" style="width: auto;">
+                    <option value="admin@example.com">Sarah (Admin)</option>
+                    <option value="analyst@example.com">David (Analyst)</option>
+                    <option value="viewer@example.com">James (Viewer)</option>
+                </select>
+            </div>
+        </header>
+
+        <div class="stats">
+            <div class="glass stat-card">
+                <h3>Current Balance</h3>
+                <p id="balance">$0.00</p>
+            </div>
+            <div class="glass stat-card">
+                <h3>Total Income</h3>
+                <p id="incomeTotal" style="color: #22c55e;">$0.00</p>
+            </div>
+            <div class="glass stat-card">
+                <h3>Total Expense</h3>
+                <p id="expenseTotal" style="color: #ef4444;">$0.00</p>
+            </div>
+        </div>
+
+        <div class="grid">
+            <section class="glass">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h2>Recent Transactions</h2>
+                    <div style="display: flex; gap: 10px;">
+                        <select id="typeFilter" onchange="fetchData()" style="padding: 6px 12px; font-size: 0.8rem; width: auto; margin:0;">
+                            <option value="">All Types</option>
+                            <option value="income">Income</option>
+                            <option value="expense">Expense</option>
+                        </select>
+                    </div>
+                </div>
+                <table id="recordsTable">
+                    <thead>
+                        <tr>
+                            <th>DATE</th>
+                            <th>CATEGORY</th>
+                            <th>TYPE</th>
+                            <th>AMOUNT</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </section>
+
+            <section id="adminPanel" class="glass hidden">
+                <h2 style="margin-bottom: 20px;">Add New Entry</h2>
+                <form id="recordForm" onsubmit="addRecord(event)">
+                    <label>Amount</label>
+                    <input type="number" step="0.01" id="amount" required>
+                    <label>Category</label>
+                    <input type="text" id="category" placeholder="e.g. Rent, Salary" required>
+                    <label>Type</label>
+                    <select id="type">
+                        <option value="income">Income</option>
+                        <option value="expense">Expense</option>
+                    </select>
+                    <label>Description (Optional)</label>
+                    <textarea id="description" rows="3"></textarea>
+                    <button type="submit">Publish Record</button>
+                </form>
+            </section>
+        </div>
+    </div>
+
+    <div id="toast" class="toast">Action completed successfully.</div>
+    <script src="/static/js/app.js"></script>
+</body>
+</html>

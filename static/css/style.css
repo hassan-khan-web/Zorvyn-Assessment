@@ -1,0 +1,45 @@
+:root {
+    --bg: #0b0c10;
+    --accent: #6c63ff;
+    --text: #ffffff;
+    --glass: rgba(255, 255, 255, 0.05);
+    --border: rgba(255, 255, 255, 0.1);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; }
+
+.dashboard { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
+
+header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
+
+.glass { background: var(--glass); backdrop-filter: blur(10px); border: 1px solid var(--border); border-radius: 20px; padding: 24px; }
+
+select, input, textarea { 
+    background: rgba(255, 255, 255, 0.1); border: 1px solid var(--border); 
+    color: white; padding: 12px 18px; border-radius: 12px; outline: none; margin-top: 8px; width: 100%;
+}
+
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin-bottom: 40px; }
+.stat-card { text-align: center; }
+.stat-card h3 { font-size: 0.9rem; opacity: 0.6; margin-bottom: 8px; }
+.stat-card p { font-size: 2rem; font-weight: 700; }
+
+.grid { display: grid; grid-template-columns: 2fr 1fr; gap: 32px; }
+
+table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+th { text-align: left; padding: 12px; opacity: 0.5; font-size: 0.8rem; border-bottom: 1px solid var(--border); }
+td { padding: 16px; border-bottom: 1px solid rgba(255, 255, 255, 0.03); }
+
+.badge { padding: 6px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
+.income { background: rgba(34, 197, 94, 0.15); color: #22c55e; }
+.expense { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
+
+button { 
+    background: var(--accent); color: white; border: none; padding: 12px 24px; border-radius: 12px; 
+    cursor: pointer; font-weight: 600; transition: transform 0.2s; margin-top: 16px;
+}
+button:hover { transform: translateY(-2px); filter: brightness(1.1); }
+
+.hidden { display: none; }
+.toast { position: fixed; bottom: 20px; right: 20px; padding: 16px 24px; background: #6c63ff; border-radius: 12px; display: none; }
