@@ -17,15 +17,16 @@ async function fetchData() {
             document.getElementById('expenseTotal').innerText = `$${data.total_expenses.toLocaleString()}`;
         }
 
-        let recUrl = `${API}/records`;
-        if(typeFilter) recUrl += `?type=${typeFilter}`;
+        let recUrl = `${API}/records?limit=20`;
+        if(typeFilter) recUrl += `&type=${typeFilter}`;
         
         const recRes = await fetch(recUrl, { headers });
         const tbody = document.querySelector('#recordsTable tbody');
         tbody.innerHTML = '';
         
         if (recRes.ok) {
-            const records = await recRes.json();
+            const response = await recRes.json();
+            const records = response.items || [];
             records.forEach(r => {
                 const row = `<tr>
                     <td>${new Date(r.date).toLocaleDateString()}</td>
@@ -35,6 +36,10 @@ async function fetchData() {
                 </tr>`;
                 tbody.innerHTML += row;
             });
+            
+            if (records.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; opacity: 0.5;">No records found.</td></tr>';
+            }
         } else {
             tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; opacity: 0.5;">Unauthorized Access to detailed records.</td></tr>';
         }
