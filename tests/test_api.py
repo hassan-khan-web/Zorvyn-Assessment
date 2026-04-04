@@ -1,10 +1,10 @@
 import pytest
 from fastapi.testclient import TestClient
-from sqlmodel import Session, SQLModel, create_engine, select
+from sqlmodel import Session, SQLModel, create_engine
 from app.database import get_session
 from main import app
 from app.models.user import User, UserRole
-from app.models.record import FinancialRecord, FinancialRecordType
+
 
 sqlite_url = "sqlite:///test.db"
 engine = create_engine(sqlite_url, connect_args={"check_same_thread": False})

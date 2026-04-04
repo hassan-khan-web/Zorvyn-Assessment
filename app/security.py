@@ -1,4 +1,4 @@
-from fastapi import HTTPException, Depends, Security, Header
+from fastapi import HTTPException, Depends, Header
 from sqlmodel import Session, select
 from app.database import get_session
 from app.models import User, UserRole

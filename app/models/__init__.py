@@ -1,15 +1,15 @@
-from app.models.user import User, UserRole, UserCreate, UserUpdate, UserRead
-from app.models.record import (
-    FinancialRecord, 
-    FinancialRecordType, 
-    FinancialRecordBase, 
-    FinancialRecordCreate,
-    FinancialRecordUpdate,
-    FinancialRecordRead
+from app.models.user import (
+    User as User,
+    UserRole as UserRole,
+    UserCreate as UserCreate,
+    UserUpdate as UserUpdate,
+    UserRead as UserRead,
 )
-
-# Handle typing for circular relationships
-from typing import TYPE_CHECKING
-if TYPE_CHECKING:
-    from app.models.record import FinancialRecord
-    from app.models.user import User
+from app.models.record import (
+    FinancialRecord as FinancialRecord,
+    FinancialRecordType as FinancialRecordType,
+    FinancialRecordBase as FinancialRecordBase,
+    FinancialRecordCreate as FinancialRecordCreate,
+    FinancialRecordUpdate as FinancialRecordUpdate,
+    FinancialRecordRead as FinancialRecordRead,
+)

@@ -2,7 +2,7 @@ from typing import List
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlmodel import Session
 from app.database import get_session
-from app.models import User, UserCreate, UserUpdate, UserRead
+from app.models import UserCreate, UserUpdate, UserRead
 from app.security import require_admin
 from app.crud.user import user as crud_user
 

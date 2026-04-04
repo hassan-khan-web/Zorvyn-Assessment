@@ -1,6 +1,9 @@
 from enum import Enum
-from typing import List, Optional
+from typing import List, Optional, TYPE_CHECKING
 from sqlmodel import Field, SQLModel, Relationship
+
+if TYPE_CHECKING:
+    from app.models.record import FinancialRecord
 
 class UserRole(str, Enum):
     ADMIN = "admin"

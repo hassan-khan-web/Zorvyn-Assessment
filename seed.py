@@ -2,8 +2,8 @@ import random
 from datetime import datetime, timedelta
 from sqlmodel import Session, SQLModel
 from app.database import engine
-from app.models.user import User, UserRole, UserCreate
-from app.models.record import FinancialRecord, FinancialRecordType, FinancialRecordCreate
+from app.models.user import UserRole, UserCreate
+from app.models.record import FinancialRecordType, FinancialRecordCreate
 from app.crud.user import user as crud_user
 from app.crud.record import record as crud_record
 
@@ -34,7 +34,7 @@ def seed_db():
                 type=random.choice(types),
                 category=random.choice(categories),
                 date=datetime.now() - timedelta(days=random.randint(0, 90)),
-                description=f"Automated seed entry",
+                description="Automated seed entry",
                 user_id=admin.id
             )
             crud_record.create(session, obj_in=record_in)

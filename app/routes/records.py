@@ -5,12 +5,11 @@ from pydantic import BaseModel
 from sqlmodel import Session
 from app.database import get_session
 from app.models import (
-    User, 
-    FinancialRecord, 
-    FinancialRecordType, 
+    User,
+    FinancialRecordType,
     FinancialRecordCreate,
     FinancialRecordUpdate,
-    FinancialRecordRead
+    FinancialRecordRead,
 )
 from app.security import require_admin, require_analyst
 from app.crud.record import record as crud_record
