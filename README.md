@@ -191,9 +191,3 @@ PYTHONPATH=. pytest tests/test_api.py -v
 - [ ] Export reports (CSV/PDF)
 - [ ] Rate limiting middleware
 - [ ] Docker containerization
-
----
-
-## 📝 License
-
-This project was created as part of a backend assessment.
