@@ -33,9 +33,6 @@ def session_fixture():
         yield session
     SQLModel.metadata.drop_all(engine)
 
-
-# ==================== Authentication Tests ====================
-
 def test_invalid_auth_returns_401():
     response = client.get("/records", headers={"email": "nonexistent@test.com"})
     assert response.status_code == 401
@@ -51,9 +48,6 @@ def test_inactive_user_returns_403():
 def test_missing_auth_header_returns_422():
     response = client.get("/records")
     assert response.status_code == 422
-
-
-# ==================== User Management Tests ====================
 
 def test_admin_can_create_user():
     response = client.post(
@@ -121,9 +115,6 @@ def test_admin_can_delete_user():
     
     response = client.delete(f"/users/{user_id}", headers={"email": "admin@test.com"})
     assert response.status_code == 204
-
-
-# ==================== Financial Record Tests ====================
 
 def test_admin_can_create_record():
     response = client.post(
@@ -263,9 +254,6 @@ def test_admin_can_delete_record():
     
     get_resp = client.get(f"/records/{record_id}", headers={"email": "analyst@test.com"})
     assert get_resp.status_code == 404
-
-
-# ==================== Dashboard Tests ====================
 
 def test_viewer_can_access_dashboard_summary():
     response = client.get("/dashboard/summary", headers={"email": "viewer@test.com"})
