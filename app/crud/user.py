@@ -9,8 +9,11 @@ class CRUDUser:
     def get_by_email(self, db: Session, email: str) -> Optional[User]:
         return db.exec(select(User).where(User.email == email)).first()
 
-    def get_multi(self, db: Session) -> List[User]:
-        return db.exec(select(User)).all()
+    def exists_by_email(self, db: Session, email: str) -> bool:
+        return db.exec(select(User).where(User.email == email)).first() is not None
+
+    def get_multi(self, db: Session, skip: int = 0, limit: int = 100) -> List[User]:
+        return db.exec(select(User).offset(skip).limit(limit)).all()
 
     def create(self, db: Session, obj_in: UserCreate) -> User:
         db_obj = User.model_validate(obj_in)
@@ -19,11 +22,11 @@ class CRUDUser:
         db.refresh(db_obj)
         return db_obj
 
-    def update(self, db: Session, db_obj: User, obj_in: User) -> User:
-        user_data = obj_in.model_dump(exclude_unset=True)
-        for field in user_data:
+    def update(self, db: Session, db_obj: User, obj_in) -> User:
+        update_data = obj_in.model_dump(exclude_unset=True)
+        for field, value in update_data.items():
             if field != "id":
-                setattr(db_obj, field, user_data[field])
+                setattr(db_obj, field, value)
         db.add(db_obj)
         db.commit()
         db.refresh(db_obj)

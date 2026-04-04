@@ -7,23 +7,27 @@ A professional-grade, role-based finance management system built with **FastAPI*
 ## 🚀 Key Features
 
 - **Advanced Role-Based Access Control (RBAC)**:
-  - **Admin**: Full authority to manage users and financial records.
-  - **Analyst**: Access to detailed records and visual insights.
-  - **Viewer**: Read-only access to high-level dashboard summaries.
-- **Enterprise Architecture**: Modular design featuring a dedicated **CRUD layer**, isolated models, and package-based routing.
-- **Visual Analytics**: Real-time aggregation of income, expenses, net balance, and monthly trends.
-- **Automated Reliability**: Comprehensive `pytest` suite ensuring 100% compliance with business rules and security guards.
-- **Interactive Interface**: A premium, glassmorphism-styled dashboard to visualize backend data flow.
+  - **Admin**: Full authority to manage users and financial records
+  - **Analyst**: Access to detailed records and visual insights
+  - **Viewer**: Read-only access to dashboard summaries
+- **Enterprise Architecture**: Modular design featuring a dedicated **CRUD layer**, isolated models, and package-based routing
+- **Visual Analytics**: Real-time aggregation of income, expenses, net balance, category breakdown, and monthly trends
+- **Paginated APIs**: Scalable record listing with filtering capabilities
+- **Comprehensive Testing**: 27 automated tests ensuring business rules and security compliance
+- **Interactive Interface**: Glassmorphism-styled dashboard to visualize backend data flow
 
 ---
 
 ## 🛠️ Technology Stack
 
-- **Backend**: FastAPI (Async-ready, high performance)
-- **Database**: SQLModel (SQLAlchemy 2.0 core + Pydantic validation)
-- **Security**: Dependency-based role guards (Mock Header Authentication)
-- **Environment**: Conda-based dependency management
-- **Frontend**: Vanilla HTML5 / CSS3 (Glassmorphism) / JavaScript (Fetch API)
+| Component | Technology |
+|-----------|------------|
+| **Backend** | FastAPI (Async-ready, high performance) |
+| **ORM** | SQLModel (SQLAlchemy 2.0 + Pydantic validation) |
+| **Database** | SQLite (easily swappable to PostgreSQL) |
+| **Security** | Dependency-based role guards |
+| **Testing** | pytest with TestClient |
+| **Docs** | Auto-generated OpenAPI (Swagger/ReDoc) |
 
 ---
 
@@ -32,62 +36,164 @@ A professional-grade, role-based finance management system built with **FastAPI*
 ```text
 .
 ├── app/
-│   ├── crud/          # Unified Database Operations (Decoupled Logic)
-│   ├── database/      # Session & Engine Configuration
-│   ├── models/        # Modular Pydantic & SQLModel Definitions
-│   ├── routes/        # Modularized API Endpoints (Users, Records, Dashboard)
-│   └── security.py    # RBAC & Mock Auth Guards
-├── static/            # Frontend Assets (Served directly by FastAPI)
-├── tests/             # Automated Integration & Unit Tests
-├── main.py            # Application Entry Point
-├── seed.py            # Automated Database Seeding Utility
-└── environment.yml    # Conda Environment Configuration
+│   ├── crud/          # Database operations layer (decoupled from routes)
+│   ├── database/      # Session & engine configuration
+│   ├── models/        # Pydantic & SQLModel schemas
+│   ├── routes/        # API endpoints (users, records, dashboard)
+│   └── security.py    # RBAC guards & authentication
+├── static/            # Frontend assets
+├── tests/             # Automated test suite (27 tests)
+├── main.py            # Application entry point
+├── seed.py            # Database seeding utility
+└── requirements.txt   # Python dependencies
 ```
 
 ---
 
 ## ⚙️ Setup & Installation
 
-### 1. Environment Setup (Recommended)
-This project uses **Conda** for isolation.
+### 1. Create Virtual Environment
 ```bash
-# Create and activate the environment
-conda env create -f environment.yml
-conda activate finance-dashboard
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+pip install -r requirements.txt
 ```
 
-### 2. Database Initialization
-Seed the database with mock users (Admin, Analyst, Viewer) and 50+ financial records:
+### 2. Seed the Database
 ```bash
 python seed.py
 ```
+This creates mock users (Admin, Analyst, Viewer) and 50 financial records.
 
 ### 3. Run the Application
 ```bash
 uvicorn main:app --reload
 ```
-Visit **[http://localhost:8000](http://localhost:8000)** to view the interactive dashboard.
+Visit **http://localhost:8000** for the dashboard, or **/docs** for Swagger UI.
 
 ---
 
-## 🧪 Testing & Documentation
+## 🔐 Role-Permission Matrix
 
-### Automated Tests
-Run the full verification suite:
+| Action | Viewer | Analyst | Admin |
+|--------|:------:|:-------:|:-----:|
+| View dashboard summary | ✅ | ✅ | ✅ |
+| View trends | ✅ | ✅ | ✅ |
+| List records | ❌ | ✅ | ✅ |
+| View single record | ❌ | ✅ | ✅ |
+| Create record | ❌ | ❌ | ✅ |
+| Update record | ❌ | ❌ | ✅ |
+| Delete record | ❌ | ❌ | ✅ |
+| Manage users | ❌ | ❌ | ✅ |
+
+---
+
+## 📡 API Reference
+
+### Authentication
+All endpoints require an `email` header for mock authentication:
 ```bash
-PYTHONPATH=. pytest tests/test_api.py
+curl -H "email: admin@example.com" http://localhost:8000/users
 ```
 
-### API Documentation
-FastAPI automatically generates interactive Swagger documentation:
-- **Swagger UI**: [http://localhost:8000/docs](http://localhost:8000/docs)
-- **ReDoc**: [http://localhost:8000/redoc](http://localhost:8000/redoc)
+### Users (`/users`)
+
+| Method | Endpoint | Description | Role |
+|--------|----------|-------------|------|
+| `POST` | `/users` | Create user | Admin |
+| `GET` | `/users` | List users (paginated) | Admin |
+| `GET` | `/users/{id}` | Get user by ID | Admin |
+| `PATCH` | `/users/{id}` | Update user | Admin |
+| `DELETE` | `/users/{id}` | Delete user | Admin |
+
+### Financial Records (`/records`)
+
+| Method | Endpoint | Description | Role |
+|--------|----------|-------------|------|
+| `POST` | `/records` | Create record | Admin |
+| `GET` | `/records` | List records (paginated, filterable) | Analyst+ |
+| `GET` | `/records/{id}` | Get record by ID | Analyst+ |
+| `PATCH` | `/records/{id}` | Update record | Admin |
+| `DELETE` | `/records/{id}` | Delete record | Admin |
+
+**Query Parameters for `GET /records`:**
+- `skip` (int): Pagination offset (default: 0)
+- `limit` (int): Max results per page (default: 20, max: 100)
+- `category` (string): Filter by category
+- `type` (enum): Filter by `income` or `expense`
+- `start_date` (datetime): Filter from date
+- `end_date` (datetime): Filter until date
+
+### Dashboard (`/dashboard`)
+
+| Method | Endpoint | Description | Role |
+|--------|----------|-------------|------|
+| `GET` | `/dashboard/summary` | Financial overview | All |
+| `GET` | `/dashboard/trends` | Monthly income/expense trends | All |
+
+**Summary Response:**
+```json
+{
+  "total_income": 15000.00,
+  "total_expenses": 8500.00,
+  "net_balance": 6500.00,
+  "category_breakdown": [
+    {"category": "Salary", "income": 10000, "expense": 0, "net": 10000}
+  ],
+  "recent_activity": [...]
+}
+```
+
+---
+
+## 🧪 Testing
+
+Run the full test suite:
+```bash
+PYTHONPATH=. pytest tests/test_api.py -v
+```
+
+**Test Coverage:**
+- Authentication (3 tests): Invalid credentials, inactive users, missing headers
+- User Management (7 tests): CRUD operations, duplicate email handling
+- Financial Records (12 tests): CRUD, validation, pagination, filtering
+- Dashboard (5 tests): Summary calculations, trends structure
 
 ---
 
 ## 🧠 Design Decisions & Assumptions
 
-- **CRUD Layer**: We implemented a dedicated CRUD layer to decouple business logic from the API routes, making the system highly testable and reusable.
-- **Mock Header Auth**: For the purpose of this assessment, authentication is handled via an `email` header to demonstrate RBAC logic without OAuth2 boilerplate.
-- **Data Integrity**: Used SQLModel's validation (e.g., `ge=0` for amounts) to ensure data correctness at the entry point.
-- **Pure Code Standard**: Zero comments were used in the source code; the implementation relies on descriptive naming and logical organization to speak for itself.
+### Architecture Choices
+1. **CRUD Layer Separation**: Business logic is decoupled from routes, making the system testable and reusable
+2. **Pydantic Schemas**: Separate schemas for Create, Update, and Read operations ensure proper API contracts
+3. **Dependency Injection**: FastAPI's `Depends()` system handles authentication and authorization cleanly
+
+### Assumptions Made
+1. **Mock Authentication**: Uses email header instead of JWT/OAuth2 to focus on RBAC logic
+2. **Single Database**: SQLite for simplicity; can be swapped to PostgreSQL via connection string
+3. **User-Record Relationship**: Records are linked to users via `user_id` for ownership tracking
+4. **No Soft Delete**: Records are permanently deleted (could add `deleted_at` for production)
+
+### Tradeoffs
+| Decision | Benefit | Tradeoff |
+|----------|---------|----------|
+| SQLite | Zero setup, portable | Not suitable for concurrent production use |
+| Email header auth | Simple demo of RBAC | Not secure for production |
+| Sync endpoints | Simpler code | Could use async for higher throughput |
+
+---
+
+## 🔮 Potential Enhancements
+
+- [ ] JWT token authentication
+- [ ] Soft delete with `deleted_at` timestamp
+- [ ] Search across record descriptions
+- [ ] Export reports (CSV/PDF)
+- [ ] Rate limiting middleware
+- [ ] Docker containerization
+
+---
+
+## 📝 License
+
+This project was created as part of a backend assessment.

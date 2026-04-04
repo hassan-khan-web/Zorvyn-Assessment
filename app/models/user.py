@@ -18,3 +18,16 @@ class User(UserBase, table=True):
 
 class UserCreate(UserBase):
     pass
+
+
+class UserUpdate(SQLModel):
+    email: str | None = None
+    role: UserRole | None = None
+    is_active: bool | None = None
+
+
+class UserRead(SQLModel):
+    id: int
+    email: str
+    role: UserRole
+    is_active: bool

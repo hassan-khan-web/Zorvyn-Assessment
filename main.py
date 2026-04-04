@@ -1,3 +1,4 @@
+from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
@@ -7,7 +8,19 @@ from starlette.requests import Request
 from app.database.session import create_db_and_tables
 from app.routes import users, records, dashboard
 
-app = FastAPI(title="Finance Dashboard API")
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    create_db_and_tables()
+    yield
+
+
+app = FastAPI(
+    title="Finance Dashboard API",
+    description="A role-based finance management system with dashboard analytics",
+    version="1.0.0",
+    lifespan=lifespan
+)
 
 app.add_middleware(
     CORSMiddleware,
@@ -26,10 +39,6 @@ app.include_router(dashboard.router)
 @app.get("/", include_in_schema=False)
 async def root():
     return RedirectResponse(url="/static/index.html")
-
-@app.on_event("startup")
-def on_startup():
-    create_db_and_tables()
 
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception):

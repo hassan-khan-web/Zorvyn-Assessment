@@ -21,3 +21,21 @@ class FinancialRecord(FinancialRecordBase, table=True):
 
 class FinancialRecordCreate(FinancialRecordBase):
     user_id: int
+
+
+class FinancialRecordUpdate(SQLModel):
+    amount: float | None = Field(default=None, ge=0)
+    type: FinancialRecordType | None = None
+    category: str | None = None
+    date: datetime | None = None
+    description: str | None = None
+
+
+class FinancialRecordRead(SQLModel):
+    id: int
+    amount: float
+    type: FinancialRecordType
+    category: str
+    date: datetime
+    description: str | None
+    user_id: int
